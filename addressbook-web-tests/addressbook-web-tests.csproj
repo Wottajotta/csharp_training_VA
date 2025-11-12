@@ -142,6 +142,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountData.cs" />
+    <Compile Include="AddressCreationTest.cs" />
+    <Compile Include="AddressData.cs" />
     <Compile Include="Circle.cs" />
     <Compile Include="Figure.cs" />
     <Compile Include="GroupData.cs" />
