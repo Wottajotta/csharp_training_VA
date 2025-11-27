@@ -156,6 +156,7 @@
     <Compile Include="appmanager\LoginHelper.cs" />
     <Compile Include="appmanager\NavigationHelper.cs" />
     <Compile Include="oop\Square.cs" />
+    <Compile Include="tests\RecordModifyTests.cs" />
     <Compile Include="tests\RecordRemovalTests.cs" />
     <Compile Include="tests\TestBase.cs" />
     <Compile Include="oop\UnitTest1.cs" />
