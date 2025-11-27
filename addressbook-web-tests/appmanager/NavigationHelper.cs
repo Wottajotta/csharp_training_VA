@@ -10,7 +10,7 @@ namespace WebAddressbookTests
         {
         }
 
-        public void GoToHomePage()
+        public void GoToStartPage()
         {
             driver.Navigate().GoToUrl(manager.BaseURL);
         }
@@ -18,6 +18,11 @@ namespace WebAddressbookTests
         public void GoToGroupPage()
         {
             driver.FindElement(By.LinkText("groups")).Click();
+        }
+
+        public void GoToHomePage()
+        {
+            driver.FindElement(By.LinkText("home")).Click();
         }
     }
 }

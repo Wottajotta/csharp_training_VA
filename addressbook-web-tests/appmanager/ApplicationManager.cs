@@ -14,6 +14,7 @@ namespace WebAddressbookTests
         protected LoginHelper loginHelper;
         protected NavigationHelper navigator;
         protected GroupHelper groupHelper;
+        protected RecordHelper addressHelper;
 
 
         public ApplicationManager()
@@ -26,6 +27,7 @@ namespace WebAddressbookTests
             loginHelper = new LoginHelper(this);
             navigator = new NavigationHelper(this);
             groupHelper = new GroupHelper(this);
+            addressHelper = new RecordHelper(this);
         }
         public IWebDriver Driver { 
             get {
@@ -73,6 +75,14 @@ namespace WebAddressbookTests
             get
             {
                 return groupHelper;
+            }
+        }
+
+        public RecordHelper Record
+                    {
+            get
+            {
+                return addressHelper;
             }
         }
     }
