@@ -23,7 +23,6 @@ namespace WebAddressbookTests
                 .FillRecordForm(record)
                 .SubmitRecordCreation();
             app.Navigator.GoToHomePage();
-            app.Auth.Logout();
         }   
     }
 }

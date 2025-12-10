@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Firefox;
 using System;
 using System.Text;
+using System.Threading;
 
 namespace WebAddressbookTests
 {
@@ -15,9 +16,11 @@ namespace WebAddressbookTests
         protected NavigationHelper navigator;
         protected GroupHelper groupHelper;
         protected RecordHelper addressHelper;
+        
+        private static ThreadLocal<ApplicationManager> app = new ThreadLocal<ApplicationManager>();
 
-
-        public ApplicationManager()
+        // Конструктор
+        private ApplicationManager()
         {
 
             driver = new FirefoxDriver();
@@ -28,6 +31,28 @@ namespace WebAddressbookTests
             navigator = new NavigationHelper(this);
             groupHelper = new GroupHelper(this);
             addressHelper = new RecordHelper(this);
+        }
+        // Деструктор
+        ~ApplicationManager()
+        {
+            try
+            {
+                driver.Quit();
+            }
+            catch (Exception)
+            {
+                // Ignore errors if unable to close the browser
+            }
+        }
+
+        // Получение экземпляра класса ApplicationManager
+        public static ApplicationManager GetInstance()
+        {
+            if (!app.IsValueCreated)
+            {
+                app.Value = new ApplicationManager();
+            }
+            return app.Value;
         }
         public IWebDriver Driver { 
             get {
@@ -42,17 +67,6 @@ namespace WebAddressbookTests
             }
                 }
 
-        public void Stop()
-        {
-            try
-            {
-                driver.Quit();
-            }
-            catch (Exception)
-            {
-                // Ignore errors if unable to close the browser
-            }
-        }
 
         public LoginHelper Auth
         {

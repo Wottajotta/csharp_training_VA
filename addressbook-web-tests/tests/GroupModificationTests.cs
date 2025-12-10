@@ -10,8 +10,8 @@ namespace WebAddressbookTests
         {
             // Подготовка данных - предусловия
             GroupData newData = new GroupData("zzz");
-            newData.Header = "sss";
-            newData.Footer = "ccc";
+            newData.Header = null;
+            newData.Footer = null;
 
             app.Groups.Modify(1, newData);
         }
