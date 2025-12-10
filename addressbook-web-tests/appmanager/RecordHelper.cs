@@ -19,6 +19,10 @@ namespace WebAddressbookTests
         public RecordHelper Modify(RecordData newData)
         {
             manager.Navigator.GoToHomePage();
+            if (IsEmptyRecord())
+            {
+                return this;
+            }
             SelectRecordToEdit();
             FillRecordForm(newData);
             SubmitRecordUpdate();
@@ -34,16 +38,23 @@ namespace WebAddressbookTests
         public RecordHelper Remove()
         {
             manager.Navigator.GoToHomePage();
+            if (IsEmptyRecord()) {
+                return this;
+            }
             SelectRecord();
             RemoveRecord();
             ReturnToHomePage();
             return this;
         }
 
-        public RecordHelper SelectRecordToEdit()
+        public bool IsEmptyRecord()
+        {
+            return !IsElementPresent(By.XPath("//table[@id='maintable']/tbody/tr[2]/td"));
+        }
+
+        public void SelectRecordToEdit()
         {
             driver.FindElement(By.XPath("//table[@id='maintable']/tbody/tr[2]/td[8]")).Click();
-            return this;
         }
 
         private void ReturnToHomePage()
@@ -58,6 +69,10 @@ namespace WebAddressbookTests
 
         private void SelectRecord()
         {
+            if (!IsElementPresent(By.XPath("//table[@id='maintable']/tbody/tr[2]/td")))
+            {
+                return;
+            }
             driver.FindElement(By.XPath("//table[@id='maintable']/tbody/tr[2]/td")).Click();
         }
 
