@@ -1,4 +1,6 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 using WebAddressbookTests.tests;
 
 
@@ -15,7 +17,15 @@ namespace WebAddressbookTests
             group.Header = "des";
             group.Footer = "fff";
 
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
             app.Groups.Create(group);
+
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+            oldGroups.Add(group);
+            oldGroups.Sort();
+            newGroups.Sort();
+            Assert.That(newGroups, Is.EqualTo(oldGroups));
         }
 
         [Test]
@@ -25,7 +35,33 @@ namespace WebAddressbookTests
             group.Header = "";
             group.Footer = "";
 
-            app.Groups.Create(group);  
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
+            app.Groups.Create(group);
+            
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+            oldGroups.Add(group);
+            oldGroups.Sort();
+            newGroups.Sort();
+            Assert.That(newGroups, Is.EqualTo(oldGroups));
+        }
+
+        [Test]
+        public void BadNameCreateGroupTest()
+        {
+            GroupData group = new GroupData("`a`a`````");
+            group.Header = "des";
+            group.Footer = "fff";
+
+            List<GroupData> oldGroups = app.Groups.GetGroupList();
+
+            app.Groups.Create(group);
+            
+            List<GroupData> newGroups = app.Groups.GetGroupList();
+            oldGroups.Add(group);
+            oldGroups.Sort();
+            newGroups.Sort();
+            Assert.That(newGroups, Is.EqualTo(oldGroups));
         }
     }
 }

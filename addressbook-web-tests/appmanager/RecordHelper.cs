@@ -1,5 +1,7 @@
 ﻿using OpenQA.Selenium;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace WebAddressbookTests
@@ -10,20 +12,29 @@ namespace WebAddressbookTests
         {
         }
 
+        public RecordHelper Create(RecordData record)
+        {
+            AddNewRecord();
+            FillRecordForm(record);
+            SubmitRecordCreation();
+            manager.Navigator.GoToHomePage();
+            return this;
+        }
+
         public RecordHelper SubmitRecordCreation()
         {
             driver.FindElement(By.XPath("//div[@id='content']/form/input[20]")).Click();
             return this;
         }
 
-        public RecordHelper Modify(RecordData newData)
+        public RecordHelper Modify(int v, RecordData newData)
         {
             manager.Navigator.GoToHomePage();
             if (IsEmptyRecord())
             {
                 return this;
             }
-            SelectRecordToEdit();
+            SelectRecordToEdit(v);
             FillRecordForm(newData);
             SubmitRecordUpdate();
             return this;
@@ -52,9 +63,9 @@ namespace WebAddressbookTests
             return !IsElementPresent(By.XPath("//table[@id='maintable']/tbody/tr[2]/td"));
         }
 
-        public void SelectRecordToEdit()
+        public void SelectRecordToEdit(int index)
         {
-            driver.FindElement(By.XPath("//table[@id='maintable']/tbody/tr[2]/td[8]")).Click();
+            driver.FindElement(By.XPath("//table[@id='maintable']/tbody/tr["+ (index+2) +"]/td[8]")).Click();
         }
 
         private void ReturnToHomePage()
@@ -99,6 +110,47 @@ namespace WebAddressbookTests
             return this;
         }
 
-        
+        public List<RecordData> GetRecordList()
+        {
+            List<RecordData> records = new List<RecordData>();
+            manager.Navigator.GoToHomePage();
+
+            ICollection<IWebElement> rows = driver.FindElements(By.XPath("//table[@id='maintable']/tbody/tr[position()>1]"));
+            foreach (IWebElement row in rows)
+            {
+                IList<IWebElement> cells = row.FindElements(By.TagName("td"));
+
+                string firstname = "";
+                string lastname = "";
+
+                if (cells.Count > 2 && !string.IsNullOrWhiteSpace(cells[2].Text))
+                {
+                    firstname = cells[2].Text.Trim();
+                    lastname = cells.Count > 1 ? cells[1].Text.Trim() : "";
+                }
+                else if (cells.Count > 1)
+                {
+                    var parts = cells[1].Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 1)
+                    {
+                        firstname = parts[0];
+                        lastname = "";
+                    }
+                    else
+                    {
+                        firstname = parts[0];
+                        lastname = string.Join(" ", parts.Skip(1));
+                    }
+                }
+
+                records.Add(new RecordData(firstname, lastname));
+            }
+
+            records = records
+                .OrderBy(r => r.Lastname ?? string.Empty, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(r => r.Firstname, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            return records;
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebAddressbookTests
 {
-    public class RecordData
+    public class RecordData : IEquatable<RecordData>, IComparable<RecordData>
     {
         private string firstname;
         private string middlename = "";
@@ -20,12 +20,20 @@ namespace WebAddressbookTests
         private string burthdayData;
         private string birthMonthData;
         private string birthYearData;
+        private string other;
+
+
+        public RecordData(string firstname, string lastname)
+        {
+            this.firstname = firstname;
+            this.lastname = lastname;
+        }
 
         public RecordData(
-            string firstname, 
-            string lastname, 
-            string address, 
-            string homePhone, 
+            string firstname,
+            string lastname,
+            string address,
+            string homePhone,
             string email,
             string burthdayData,
             string birthMonthData,
@@ -53,6 +61,44 @@ namespace WebAddressbookTests
             this.nickname = nickname;
             this.title = title;
             this.company = company;
+        }
+
+        public bool Equals(RecordData other)
+        {
+            if (Object.ReferenceEquals(other, null))
+            {
+                return false;
+            }
+            if (Object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            return (Firstname == other.Firstname && Lastname == other.Lastname);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Firstname?.GetHashCode() ?? 0) ^ (Lastname?.GetHashCode() ?? 0);
+        }
+
+        public override string ToString()
+        {
+            return "Firstname = " + Firstname + " LastName = " + Lastname;
+        }
+
+        public int CompareTo(RecordData other)
+        {
+            if (ReferenceEquals(other, null))
+            {
+                return 1;
+            }
+
+            int cmp = string.Compare(Lastname, other.Lastname, StringComparison.OrdinalIgnoreCase);
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+            return string.Compare(Firstname, other.Firstname, StringComparison.OrdinalIgnoreCase);
         }
 
         public string Firstname
