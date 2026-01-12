@@ -12,6 +12,17 @@ namespace WebAddressbookTests
         {
         }
 
+        public RecordHelper CreateIfRecordEmpty()
+        {
+            manager.Navigator.GoToHomePage();
+            if (IsEmptyRecord())
+            {
+                RecordData record = new RecordData("Simple", "Record", "123 Main St, Simple", "555-555", "simple@test.ru", "20", "May", "1873");
+                Create(record);
+            }
+            return this;
+        }
+
         public RecordHelper Create(RecordData record)
         {
             AddNewRecord();
@@ -27,13 +38,10 @@ namespace WebAddressbookTests
             return this;
         }
 
+
         public RecordHelper Modify(int v, RecordData newData)
         {
-            manager.Navigator.GoToHomePage();
-            if (IsEmptyRecord())
-            {
-                return this;
-            }
+            CreateIfRecordEmpty();
             SelectRecordToEdit(v);
             FillRecordForm(newData);
             SubmitRecordUpdate();
@@ -48,10 +56,7 @@ namespace WebAddressbookTests
 
         public RecordHelper Remove()
         {
-            manager.Navigator.GoToHomePage();
-            if (IsEmptyRecord()) {
-                return this;
-            }
+            CreateIfRecordEmpty();
             SelectRecord();
             RemoveRecord();
             ReturnToHomePage();

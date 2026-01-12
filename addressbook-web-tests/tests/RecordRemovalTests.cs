@@ -14,6 +14,7 @@ namespace WebAddressbookTests
         [Test]
         public void RecordRemovalTest()
         {
+
             List<RecordData> oldrecords = app.Record.GetRecordList();
 
             app.Record.Remove();
