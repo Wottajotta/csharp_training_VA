@@ -15,6 +15,9 @@ namespace WebAddressbookTests
         public void RecordRemovalTest()
         {
 
+            if (app.Record.GetRecordList().Count == 0) {
+                app.Record.Create(new RecordData("Simple", "Record", "123 Main St, Simple", "555-555", "simple@test.ru", "20", "May", "1873"));
+            }
             List<RecordData> oldrecords = app.Record.GetRecordList();
 
             app.Record.Remove();

@@ -14,18 +14,6 @@ namespace WebAddressbookTests
         }
 
 
-        public GroupHelper CreateGroupIfEmpty()
-        {
-            manager.Navigator.GoToGroupPage();
-            if (IsEmptyGroup())
-            {
-                GroupData group = new GroupData("DefaultGroup");
-                Create(group);
-            }
-            return this;
-
-
-        }
         public GroupHelper Create(GroupData group)
         {
             manager.Navigator.GoToGroupPage();
@@ -37,7 +25,7 @@ namespace WebAddressbookTests
         }
         public GroupHelper Modify(int v, GroupData newData)
         {
-            CreateGroupIfEmpty();
+            manager.Navigator.GoToGroupPage();
             SelectGroup(v);
             InitGroupModification();
             FillGroup(newData);
@@ -50,7 +38,7 @@ namespace WebAddressbookTests
 
         public GroupHelper Remove(int n)
         {
-            CreateGroupIfEmpty();
+            manager.Navigator.GoToGroupPage();
             SelectGroup(n);
             RemoveGroup();
             ReturnToGroupPage();
