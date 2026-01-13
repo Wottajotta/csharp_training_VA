@@ -25,6 +25,7 @@ namespace WebAddressbookTests
         public RecordHelper SubmitRecordCreation()
         {
             driver.FindElement(By.XPath("//div[@id='content']/form/input[20]")).Click();
+            recordCache = null;
             return this;
         }
 
@@ -41,6 +42,7 @@ namespace WebAddressbookTests
         public RecordHelper SubmitRecordUpdate()
         {
             driver.FindElement(By.Name("update")).Click();
+            recordCache = null;
             return this;
         }
 
@@ -71,6 +73,7 @@ namespace WebAddressbookTests
         private void RemoveRecord()
         {
             driver.FindElement(By.Name("delete")).Click();
+            recordCache = null;
         }
 
         private void SelectRecord()
@@ -105,47 +108,50 @@ namespace WebAddressbookTests
             return this;
         }
 
+        private List<RecordData> recordCache = null;
+
         public List<RecordData> GetRecordList()
         {
-            List<RecordData> records = new List<RecordData>();
-            manager.Navigator.GoToHomePage();
-
-            ICollection<IWebElement> rows = driver.FindElements(By.XPath("//table[@id='maintable']/tbody/tr[position()>1]"));
-            foreach (IWebElement row in rows)
+            if (recordCache == null)
             {
-                IList<IWebElement> cells = row.FindElements(By.TagName("td"));
-
-                string firstname = "";
-                string lastname = "";
-
-                if (cells.Count > 2 && !string.IsNullOrWhiteSpace(cells[2].Text))
+                recordCache = new List<RecordData>();
+                manager.Navigator.GoToHomePage();
+                ICollection<IWebElement> rows = driver.FindElements(By.XPath("//table[@id='maintable']/tbody/tr[position()>1]"));
+                foreach (IWebElement row in rows)
                 {
-                    firstname = cells[2].Text.Trim();
-                    lastname = cells.Count > 1 ? cells[1].Text.Trim() : "";
-                }
-                else if (cells.Count > 1)
-                {
-                    var parts = cells[1].Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 1)
-                    {
-                        firstname = parts[0];
-                        lastname = "";
-                    }
-                    else
-                    {
-                        firstname = parts[0];
-                        lastname = string.Join(" ", parts.Skip(1));
-                    }
-                }
+                    IList<IWebElement> cells = row.FindElements(By.TagName("td"));
 
-                records.Add(new RecordData(firstname, lastname));
+                    string firstname = "";
+                    string lastname = "";
+
+                    if (cells.Count > 2 && !string.IsNullOrWhiteSpace(cells[2].Text))
+                    {
+                        firstname = cells[2].Text.Trim();
+                        lastname = cells.Count > 1 ? cells[1].Text.Trim() : "";
+                    }
+                    else if (cells.Count > 1)
+                    {
+                        var parts = cells[1].Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length == 1)
+                        {
+                            firstname = parts[0];
+                            lastname = "";
+                        }
+                        else
+                        {
+                            firstname = parts[0];
+                            lastname = string.Join(" ", parts.Skip(1));
+                        }
+                    }
+
+                    recordCache.Add(new RecordData(firstname, lastname));
+                }
             }
-
-            records = records
+            recordCache = recordCache
                 .OrderBy(r => r.Lastname ?? string.Empty, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(r => r.Firstname, StringComparer.OrdinalIgnoreCase)
                 .ToList();
-            return records;
+            return new List<RecordData>(recordCache);
         }
     }
 }

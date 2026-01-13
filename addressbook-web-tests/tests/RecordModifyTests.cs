@@ -25,7 +25,6 @@ namespace WebAddressbookTests
 
             app.Record.Modify(0, newData);
 
-
             List<RecordData> newrecords = app.Record.GetRecordList();
 
             oldrecords[0].Firstname = newData.Firstname;
