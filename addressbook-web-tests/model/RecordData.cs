@@ -2,31 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace WebAddressbookTests
 {
     public class RecordData : IEquatable<RecordData>, IComparable<RecordData>
     {
-        private string firstname;
-        private string middlename = "";
-        private string lastname;
-        private string nickname = "";
-        private string title = "";
-        private string company = "";
-        private string address;
-        private string homePhone;
-        private string email;
-        private string burthdayData;
-        private string birthMonthData;
-        private string birthYearData;
-        private string other;
 
+        private string allPhones;
+        private string allEmails;
 
         public RecordData(string firstname, string lastname)
         {
-            this.firstname = firstname;
-            this.lastname = lastname;
+            Firstname = firstname;
+            Lastname = lastname;
         }
 
         public RecordData(
@@ -40,14 +30,29 @@ namespace WebAddressbookTests
             string birthYearData
             )
         {
-            this.firstname = firstname;
-            this.lastname = lastname;
-            this.address = address;
-            this.homePhone = homePhone;
-            this.email = email;
-            this.burthdayData = burthdayData;
-            this.birthMonthData = birthMonthData;
-            this.birthYearData = birthYearData;
+            Firstname = firstname;
+            Lastname = lastname;
+            Address = address;
+            HomePhone = homePhone;
+            Email = email;
+            BurthdayData = burthdayData;
+            BirthMonthData = birthMonthData;
+            BirthYearData = birthYearData;
+        }
+
+        public RecordData(
+            string firstname,
+            string lastname,
+            string address,
+            string homePhone,
+            string email
+            )
+        {
+            Firstname = firstname;
+            Lastname = lastname;
+            Address = address;
+            HomePhone = homePhone;
+            Email = email;
         }
 
         public RecordData(
@@ -57,10 +62,10 @@ namespace WebAddressbookTests
             string company
             )
         {
-            this.middlename = middlename;
-            this.nickname = nickname;
-            this.title = title;
-            this.company = company;
+            Middlename = middlename;
+            Nickname = nickname;
+            Title = title;
+            Company = company;
         }
 
         public bool Equals(RecordData other)
@@ -101,79 +106,73 @@ namespace WebAddressbookTests
             return string.Compare(Firstname, other.Firstname, StringComparison.OrdinalIgnoreCase);
         }
 
-        public string Firstname
-        {
-            get { return firstname; }
-            set { firstname = value; }
+        public string Firstname { get; set; }
+
+
+        public string Middlename { get; set; }
+
+
+        public string Lastname { get; set; }
+
+
+        public string Nickname { get; set; }
+
+
+        public string Title { get; set; }
+
+
+        public string Company { get; set; }
+
+
+        public string Address { get; set; }
+
+
+        public string HomePhone { get; set; }
+
+        public string MobilePhone { get; set; }
+
+        public string WorkPhone { get; set; }
+
+        public string AllPhones {
+            get
+            {
+                if (allPhones != null)
+                {
+                    return allPhones;
+                }
+                string[] phones = new[] { HomePhone, MobilePhone, WorkPhone };
+                allPhones = string.Join("\r\n", phones.Select(Cleanup).Where(p => !string.IsNullOrEmpty(p)));
+                return allPhones;
+            }
+                 
+            set
+            {
+                allPhones = value;
+            }
+                 
         }
 
-        public string Middlename
+        public string Email { get; set; }
+
+        public string AllEmails { get; set; }
+
+        public string BurthdayData { get; set; }
+
+
+        public string BirthMonthData { get; set; }
+
+
+        public string BirthYearData { get; set; }
+
+
+        private string Cleanup(string phone)
         {
-            get { return middlename; }
-            set { middlename = value; }
+            if (string.IsNullOrEmpty(phone))
+            {
+                return "";
+            }
+            return Regex.Replace(phone, "[ -()]", "");
         }
-
-        public string Lastname
-        {
-            get { return lastname; }
-            set { lastname = value; }
-        }
-
-        public string Nickname
-        {
-            get { return nickname; }
-            set { nickname = value; }
-        }
-
-        public string Title
-        {
-            get { return title; }
-            set { title = value; }
-        }
-
-        public string Company
-        {
-            get { return company; }
-            set { company = value; }
-        }
-
-        public string Address
-        {
-            get { return address; }
-            set { address = value; }
-        }
-
-        public string HomePhone
-        {
-            get { return homePhone; }
-            set { homePhone = value; }
-        }
-
-        public string Email
-        {
-            get { return email; }
-            set { email = value; }
-        }
-
-        public string BurthdayData
-        {
-            get { return burthdayData; }
-            set { burthdayData = value; }
-        }
-
-        public string BirthMonthData
-        {
-            get { return birthMonthData; }
-            set { birthMonthData = value; }
-        }
-
-        public string BirthYearData
-        {
-            get { return birthYearData; }
-            set { birthYearData = value; }
-        }
-
-
 
     }
 }
