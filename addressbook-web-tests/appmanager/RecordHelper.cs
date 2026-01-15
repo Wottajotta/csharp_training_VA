@@ -66,6 +66,11 @@ namespace WebAddressbookTests
             driver.FindElement(By.XPath("//table[@id='maintable']/tbody/tr["+ (index+2) +"]/td[8]")).Click();
         }
 
+        public void SelectRecordToPage(int index)
+        {
+            driver.FindElement(By.XPath("//table[@id='maintable']/tbody/tr[" + (index + 2) + "]/td[7]")).Click();
+        }
+
         private void ReturnToHomePage()
         {
             driver.FindElement(By.LinkText("home page")).Click();
@@ -203,6 +208,11 @@ namespace WebAddressbookTests
             };
         }
 
+        public RecordData GetRecordInformationFromPage(int index)
+        {
+            manager.Navigator.GoToHomePage();
+        }
+
         public int GetNumberOfSearchResults()
         {
             manager.Navigator.GoToHomePage();
@@ -210,5 +220,7 @@ namespace WebAddressbookTests
             Match m = new Regex(@"\d+").Match(Text);
             return Int32.Parse(m.Value);
         }
+
+
     }
 }
