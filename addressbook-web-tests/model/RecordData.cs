@@ -171,7 +171,7 @@ namespace WebAddressbookTests
             {
                 return "";
             }
-            return Regex.Replace(phone, "[ -()]", "");
+            return Regex.Replace(phone, "[ —–-()]", "");
         }
 
     }

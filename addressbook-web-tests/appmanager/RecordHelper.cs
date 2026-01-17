@@ -208,10 +208,10 @@ namespace WebAddressbookTests
             };
         }
 
-        public RecordData GetRecordInformationFromPage(int index)
-        {
-            manager.Navigator.GoToHomePage();
-        }
+        //public RecordData GetRecordInformationFromPage(int index)
+        //{
+        //    manager.Navigator.GoToHomePage();
+        //}
 
         public int GetNumberOfSearchResults()
         {
