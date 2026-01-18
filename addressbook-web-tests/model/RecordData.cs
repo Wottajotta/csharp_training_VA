@@ -68,23 +68,24 @@ namespace WebAddressbookTests
             Company = company;
         }
 
+
         public bool Equals(RecordData other)
         {
-            if (Object.ReferenceEquals(other, null))
-            {
-                return false;
-            }
-            if (Object.ReferenceEquals(this, other))
-            {
-                return true;
-            }
-            return (Firstname == other.Firstname && Lastname == other.Lastname);
+            if (ReferenceEquals(other, null)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            string Normalize(string s) => s?.Normalize(NormalizationForm.FormC);
+
+            return Normalize(Firstname) == Normalize(other.Firstname)
+                && Normalize(Lastname) == Normalize(other.Lastname);
         }
 
         public override int GetHashCode()
         {
-            return (Firstname?.GetHashCode() ?? 0) ^ (Lastname?.GetHashCode() ?? 0);
+            string Normalize(string s) => s?.Normalize(NormalizationForm.FormC);
+            return (Normalize(Firstname)?.GetHashCode() ?? 0) ^ (Normalize(Lastname)?.GetHashCode() ?? 0);
         }
+
 
         public override string ToString()
         {
@@ -168,11 +169,21 @@ namespace WebAddressbookTests
         private string Cleanup(string phone)
         {
             if (string.IsNullOrEmpty(phone))
-            {
                 return "";
+
+            char[] charsToRemove = new char[]
+            {
+        '(', ')', ' ', '-', '–', '—', '‒', '−', '‐', '‑'
+            };
+
+            foreach (var c in charsToRemove)
+            {
+                phone = phone.Replace(c.ToString(), "");
             }
-            return Regex.Replace(phone, "[ —–-()]", "");
+
+            return phone;
         }
+
 
     }
 }

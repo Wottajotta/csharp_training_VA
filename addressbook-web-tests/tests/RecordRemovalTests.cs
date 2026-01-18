@@ -11,12 +11,33 @@ namespace WebAddressbookTests
     [TestFixture]
     public class RecordRemovalTests : AuthTestBase
     {
-        [Test]
-        public void RecordRemovalTest()
+        public static IEnumerable<RecordData> RandomRecordDataProvider()
+        {
+            List<RecordData> records = new List<RecordData>();
+            for (int i = 0; i < 3; i++)
+            {
+                records.Add(new RecordData(GenerateRandomString(30), GenerateRandomString(30))
+                {
+                    Middlename = GenerateRandomString(10),
+                    Nickname = GenerateRandomString(10),
+                    Title = GenerateRandomString(5),
+                    Company = GenerateRandomString(15),
+                    HomePhone = GenerateRandomPhone(),
+                    MobilePhone = GenerateRandomPhone(),
+                    WorkPhone = GenerateRandomPhone(),
+                    Email = GenerateRandomEmail(10)
+                });
+            }
+            return records;
+        }
+
+
+        [Test, TestCaseSource("RandomRecordDataProvider")]
+        public void RecordRemovalTest(RecordData record)
         {
 
             if (app.Record.GetRecordList().Count == 0) {
-                app.Record.Create(new RecordData("Simple", "Record", "123 Main St, Simple", "555-555", "simple@test.ru", "20", "May", "1873"));
+                app.Record.Create(record);
             }
             List<RecordData> oldrecords = app.Record.GetRecordList();
 

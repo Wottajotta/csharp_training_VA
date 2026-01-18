@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace WebAddressbookTests
 {
@@ -16,30 +18,36 @@ namespace WebAddressbookTests
             Header = header;
             Footer = footer;
         }
+        private string Normalize(string s)
+        {
+            if (s == null) return null;
+            s = s.Replace("\u00A0", " ");
+            s = System.Text.RegularExpressions.Regex.Replace(s, @"\s+", " ");
+            s = s.Trim();
+            return s.Normalize(System.Text.NormalizationForm.FormC);
+        }
 
         public bool Equals(GroupData other)
         {
-            if (Object.ReferenceEquals(other, null))
-            {
-                return false;
-            }
-            if (Object.ReferenceEquals(this, other))
-            {
-                return true;
-            }
-            return Name == other.Name;
+            if (ReferenceEquals(other, null)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return Normalize(Name) == Normalize(other.Name);
         }
+
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode();
+            return Normalize(Name)?.GetHashCode() ?? 0;
         }
+
+
 
         public string Name { get; set; }
 
         public override string ToString()
         {
-            return "name = " + Name;
+            return "name = " + Name + "\nheader = " + Header + "\nfooter = " + Footer;
         }
 
         public int CompareTo(GroupData other)

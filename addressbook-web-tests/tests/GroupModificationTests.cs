@@ -7,28 +7,39 @@ namespace WebAddressbookTests
     [TestFixture]
     public class GroupModificationTests : AuthTestBase
     {
-        [Test]
-        public void GroupModificationTest()
+
+        public static IEnumerable<GroupData> RandomGroupDataProvider()
         {
-            // Подготовка данных - предусловия
-            GroupData newData = new GroupData("zzz");
-            newData.Header = null;
-            newData.Footer = null;
+            List<GroupData> groups = new List<GroupData>();
+            for (int i = 0; i < 3; i++)
+            {
+                groups.Add(new GroupData(GenerateRandomString(30))
+                {
+                    Header = null,
+                    Footer = null
+                });
+            }
+            return groups;
+        }
+
+        [Test, TestCaseSource("RandomGroupDataProvider")]
+        public void GroupModificationTest(GroupData groups)
+        {
 
 
             if (app.Groups.GetGroupList().Count == 0)
             {
-                app.Groups.Create(new GroupData("abc"));
+                app.Groups.Create(groups);
             }
             List<GroupData> oldGroups = app.Groups.GetGroupList();
             GroupData oldData = oldGroups[0];
 
-            app.Groups.Modify(0, newData);
+            app.Groups.Modify(0, groups);
 
             Assert.That(oldGroups.Count, Is.EqualTo(app.Groups.GetGroupCount()));
 
             List<GroupData> newGroups = app.Groups.GetGroupList();
-            oldGroups[0].Name = newData.Name;
+            oldGroups[0].Name = groups.Name;
             oldGroups.Sort();
             newGroups.Sort();
             Assert.That(newGroups, Is.EqualTo(oldGroups));
@@ -37,7 +48,7 @@ namespace WebAddressbookTests
             {
                 if(group.Id == oldData.Id)
                 {
-                    Assert.That(newData.Name, Is.EqualTo(group.Name));
+                    Assert.That(groups.Name, Is.EqualTo(group.Name));
                 }
             }
         }

@@ -9,15 +9,29 @@ namespace WebAddressbookTests
     public class CreateRecordTests : AuthTestBase
     {
 
-        [Test]
-        public void CreateNewRecord()
+        public static IEnumerable<RecordData> RandomRecordDataProvider()
         {
-            // Тестовые данные
-            RecordData record = new RecordData("Anton", "Ruslanov", "123 Main St, Anytown", "555-1234", "rus@test.ru", "20", "May", "1990");
-            record.Middlename = "Ruslanovich";
-            record.Nickname = "ruslan123";
-            record.Title = "Mr.";
-            record.Company = "Ruslan Inc.";
+            List<RecordData> records = new List<RecordData>();
+            for (int i = 0; i < 5; i++)
+            {
+                records.Add(new RecordData(GenerateRandomString(30), GenerateRandomString(30))
+                {
+                    Middlename = GenerateRandomString(10),
+                    Nickname = GenerateRandomString(10),
+                    Title = GenerateRandomString(5),
+                    Company = GenerateRandomString(15),
+                    HomePhone = GenerateRandomPhone(),
+                    MobilePhone = GenerateRandomPhone(),
+                    WorkPhone = GenerateRandomPhone(),
+                    Email = GenerateRandomEmail(10)
+                });
+            }
+            return records;
+        }
+
+        [Test, TestCaseSource("RandomRecordDataProvider")]
+        public void CreateNewRecord(RecordData record)
+        {
 
             List<RecordData> oldrecords = app.Record.GetRecordList();
 

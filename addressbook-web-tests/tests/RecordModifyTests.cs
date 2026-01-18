@@ -11,26 +11,49 @@ namespace WebAddressbookTests
     [TestFixture]
     public class RecordModifyTests : AuthTestBase
     {
-        [Test]
-        public void ModifyRecordTest()
+
+        public static IEnumerable<RecordData> RandomRecordDataProvider()
         {
-            // Тестовые данные
-            RecordData newData = new RecordData("Ivan", "Ivanov", "456 Elm St, Othertown", "555-5678", "ivan@test.ru", "30", "June", "2005");
-            // Тестовые шаги
+            List<RecordData> records = new List<RecordData>();
+            for (int i = 0; i < 3; i++)
+            {
+                records.Add(new RecordData(GenerateRandomString(30), GenerateRandomString(30))
+                {
+                    Middlename = GenerateRandomString(10),
+                    Nickname = GenerateRandomString(10),
+                    Title = GenerateRandomString(5),
+                    Company = GenerateRandomString(15),
+                    HomePhone = GenerateRandomPhone(),
+                    MobilePhone = GenerateRandomPhone(),
+                    WorkPhone = GenerateRandomPhone(),
+                    Email = GenerateRandomEmail(10)
+                });
+            }
+            return records;
+        }
+
+
+        [Test, TestCaseSource("RandomRecordDataProvider")]
+        public void ModifyRecordTest(RecordData record)
+        {
             if (app.Record.GetRecordList().Count == 0)
             {
-                app.Record.Create(new RecordData("Simple", "Record", "123 Main St, Simple", "555-555", "simple@test.ru", "20", "May", "1873"));
+                app.Record.Create(record);
             }
-            List<RecordData> oldrecords = app.Record.GetRecordList();
 
-            app.Record.Modify(0, newData);
+            List<RecordData> oldrecords = app.Record.GetRecordList();
+            RecordData oldData = oldrecords[0];
+
+            app.Record.Modify(0, record);
+
+            oldData.Firstname = record.Firstname;
+            oldData.Lastname = record.Lastname;
 
             List<RecordData> newrecords = app.Record.GetRecordList();
 
-            oldrecords[0].Firstname = newData.Firstname;
-            oldrecords[0].Lastname = newData.Lastname;
+            oldrecords.Sort();
+            newrecords.Sort();
 
-            // Проверка
             Assert.That(newrecords, Is.EqualTo(oldrecords));
         }
     }

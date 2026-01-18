@@ -9,13 +9,27 @@ namespace WebAddressbookTests
     public class GroupRemovalTests : AuthTestBase
     {
 
-        [Test]
-        public void GroupRemovalTest()
+        public static IEnumerable<GroupData> RandomGroupDataProvider()
+        {
+            List<GroupData> groups = new List<GroupData>();
+            for (int i = 0; i < 3; i++)
+            {
+                groups.Add(new GroupData(GenerateRandomString(30))
+                {
+                    Header = GenerateRandomString(100),
+                    Footer = GenerateRandomString(100)
+                });
+            }
+            return groups;
+        }
+
+        [Test, TestCaseSource("RandomGroupDataProvider")]
+        public void GroupRemovalTest(GroupData groups)
         {
 
             if (app.Groups.GetGroupList().Count == 0)
             {
-                app.Groups.Create(new GroupData("abc"));
+                app.Groups.Create(groups);
             }
             List<GroupData> oldGroups = app.Groups.GetGroupList();
 
