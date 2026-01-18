@@ -208,10 +208,34 @@ namespace WebAddressbookTests
             };
         }
 
-        //public RecordData GetRecordInformationFromPage(int index)
-        //{
-        //    manager.Navigator.GoToHomePage();
-        //}
+        public RecordData GetRecordInformationFromPage(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            SelectRecordToPage(index);
+            IList<IWebElement> info = driver.FindElements(By.Id("content"))[index]
+                .FindElements(By.TagName("br"));
+            string[] name = driver.FindElement(By.Id("content")).FindElement(By.TagName("b")).Text.Split(' ');
+           
+            string firstName = name[0];
+            string lastName = name[2];
+            string address = info[1].Text;
+
+            string homePhone = info[2].Text;
+            string mobilePhone = info[3].Text;
+            string workPhone = info[4].Text;
+
+            string email = info[5].Text;
+
+            return new RecordData(firstName, lastName)
+            {
+                Address = address,
+                HomePhone = homePhone,
+                MobilePhone = mobilePhone,
+                WorkPhone = workPhone,
+                Email = email
+
+            };
+        }
 
         public int GetNumberOfSearchResults()
         {
