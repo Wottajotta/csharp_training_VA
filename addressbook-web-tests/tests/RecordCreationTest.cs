@@ -46,7 +46,7 @@ namespace WebAddressbookTests
         }
 
 
-        [Test, TestCaseSource("RecordDataFromXmlFile")]
+        [Test, TestCaseSource("RecordDataFromJsonFile")]
         public void CreateNewRecord(RecordData record)
         {
 
