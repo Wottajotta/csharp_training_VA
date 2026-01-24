@@ -196,6 +196,8 @@ namespace WebAddressbookTests
             string workPhone = driver.FindElement(By.Name("work")).GetAttribute("value");
 
             string email = driver.FindElement(By.Name("email")).GetAttribute("value");
+            string email2 = driver.FindElement(By.Name("email2")).GetAttribute("value");
+            string email3 = driver.FindElement(By.Name("email3")).GetAttribute("value");
 
             return new RecordData(firstName, lastName)
             {
@@ -203,7 +205,9 @@ namespace WebAddressbookTests
                 HomePhone = homePhone,
                 MobilePhone = mobilePhone,
                 WorkPhone = workPhone,
-                Email = email
+                Email = email,
+                Email2 = email2,
+                Email3 = email3
 
             };
         }
@@ -212,27 +216,14 @@ namespace WebAddressbookTests
         {
             manager.Navigator.GoToHomePage();
             SelectRecordToPage(index);
-            IList<IWebElement> info = driver.FindElements(By.Id("content"))[index]
-                .FindElements(By.TagName("br"));
-            string[] name = driver.FindElement(By.Id("content")).FindElement(By.TagName("b")).Text.Split(' ');
-           
-            string firstName = name[0];
-            string lastName = name[2];
-            string address = info[1].Text;
+            string allText = driver.FindElement(By.Id("content")).Text
+            .Replace("\r\n", " ")
+            .Replace("\n", " ")
+            .Trim();
 
-            string homePhone = info[2].Text;
-            string mobilePhone = info[3].Text;
-            string workPhone = info[4].Text;
-
-            string email = info[5].Text;
-
-            return new RecordData(firstName, lastName)
+            return new RecordData(allText)
             {
-                Address = address,
-                HomePhone = homePhone,
-                MobilePhone = mobilePhone,
-                WorkPhone = workPhone,
-                Email = email
+                AllText = allText
 
             };
         }

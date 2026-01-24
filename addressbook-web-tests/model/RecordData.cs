@@ -12,8 +12,14 @@ namespace WebAddressbookTests
 
         private string allPhones;
         private string allEmails;
+        private string allText;
 
         public RecordData() {}
+
+        public RecordData(string allText) 
+        {
+            
+        }
 
         public RecordData(string firstname, string lastname)
         {
@@ -157,7 +163,46 @@ namespace WebAddressbookTests
 
         public string Email { get; set; }
 
-        public string AllEmails { get; set; }
+        public string Email2 { get; set; }
+
+        public string Email3 { get; set; }
+
+        public string AllEmails
+        {
+            get
+            {
+                if (allEmails != null)
+                {
+                    return allEmails;
+                }
+                string[] emails = new[] { Email, Email2, Email3 };
+                allEmails = string.Join("\r\n", emails.Where(e => !string.IsNullOrEmpty(e)));
+                return allEmails;
+            }
+            set
+            {
+                allEmails = value;
+            }
+        }
+
+        public string AllText
+        {
+            get
+            {
+                if (allText != null)
+                {
+                    return allText;
+                }
+                string[] text = new[] {Firstname, Middlename, Lastname, Nickname, Title, Company, Address, AllPhones, AllEmails};
+                allText = string.Join(" ", text.Where(t => !string.IsNullOrEmpty(t)));
+                return allText;
+
+            }
+            set
+            {
+                allText = value;
+            }
+        }
 
         public string BurthdayData { get; set; }
 
@@ -175,7 +220,7 @@ namespace WebAddressbookTests
 
             char[] charsToRemove = new char[]
             {
-        '(', ')', ' ', '-', '–', '—', '‒', '−', '‐', '‑'
+        '(', ')', ' ', '-', '–', '—', '‒', '−', '‐', '‑', 'H', 'M', 'W', ':'
             };
 
             foreach (var c in charsToRemove)

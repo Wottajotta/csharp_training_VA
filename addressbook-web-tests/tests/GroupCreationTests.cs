@@ -5,9 +5,11 @@ using NUnit.Framework.Constraints;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using System.Linq;
 using System.Xml.Serialization;
 using WebAddressbookTests.tests;
 using Excel = Microsoft.Office.Interop.Excel;
+using System;
 
 
 namespace WebAddressbookTests
@@ -100,6 +102,21 @@ namespace WebAddressbookTests
             oldGroups.Sort();
             newGroups.Sort();
             Assert.That(newGroups, Is.EqualTo(oldGroups));
+        }
+
+        [Test]
+        public void TestDBConnectivity()
+        {
+            DateTime start = DateTime.Now;
+            List<GroupData> fromUI = app.Groups.GetGroupList();
+            DateTime end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
+
+
+            start = DateTime.Now;
+            List<GroupData> fromDB = GroupData.GetAll();
+            end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
         }
     }
 }

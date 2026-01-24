@@ -18,6 +18,7 @@ namespace WebAddressbookTests
             Assert.That(fromTable, Is.EqualTo(fromForm));
             Assert.That(fromTable.Address, Is.EqualTo(fromForm.Address));
             Assert.That(fromTable.AllPhones, Is.EqualTo(fromForm.AllPhones));
+            Assert.That(fromTable.AllEmails, Is.EqualTo(fromForm.AllEmails));
         }
 
         [Test]
@@ -26,7 +27,7 @@ namespace WebAddressbookTests
             RecordData fromForm = app.Record.GetRecordInformationFromForm(0);
             RecordData fromPage = app.Record.GetRecordInformationFromPage(0);
 
-            Assert.That(fromPage, Is.EqualTo(fromForm));
+            Assert.That(fromPage.AllText, Is.EqualTo(fromForm.AllText));
         }
 
     }
