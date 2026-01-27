@@ -6,7 +6,7 @@ using WebAddressbookTests.tests;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class GroupRemovalTests : AuthTestBase
+    public class GroupRemovalTests : GroupTestBase
     {
 
         public static IEnumerable<GroupData> RandomGroupDataProvider()

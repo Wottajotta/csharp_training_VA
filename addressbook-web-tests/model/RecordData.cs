@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LinqToDB.Mapping;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace WebAddressbookTests
 {
+    [Table(Name = "addressbook")]
     public class RecordData : IEquatable<RecordData>, IComparable<RecordData>
     {
 
@@ -115,12 +117,14 @@ namespace WebAddressbookTests
             return string.Compare(Firstname, other.Firstname, StringComparison.OrdinalIgnoreCase);
         }
 
+        [Column(Name = "id"), PrimaryKey]
+        public string Id { get; set; }
+
+        [Column(Name = "firstname")]
         public string Firstname { get; set; }
-
-
         public string Middlename { get; set; }
 
-
+        [Column(Name = "lastname")]
         public string Lastname { get; set; }
 
 
@@ -141,6 +145,9 @@ namespace WebAddressbookTests
         public string MobilePhone { get; set; }
 
         public string WorkPhone { get; set; }
+
+        [Column(Name ="deprecated")]
+        public string Deprecated { get; set; }
 
         public string AllPhones {
             get
@@ -231,6 +238,12 @@ namespace WebAddressbookTests
             return phone;
         }
 
-
+        public static List<RecordData> GetAll()
+        {
+            using (AddressBookDB db = new AddressBookDB())
+            {
+                return (from r in db.Records.Where(x => x.Deprecated == "0000-00-00 00:00:00") select r).ToList();
+            }
+        }
     }
 }

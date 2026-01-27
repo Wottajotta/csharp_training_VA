@@ -9,7 +9,7 @@ using WebAddressbookTests.tests;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class RecordRemovalTests : AuthTestBase
+    public class RecordRemovalTests : RecordTestBase
     {
         public static IEnumerable<RecordData> RandomRecordDataProvider()
         {
@@ -39,11 +39,11 @@ namespace WebAddressbookTests
             if (app.Record.GetRecordList().Count == 0) {
                 app.Record.Create(record);
             }
-            List<RecordData> oldrecords = app.Record.GetRecordList();
+            List<RecordData> oldrecords = RecordData.GetAll();
 
             app.Record.Remove();
 
-            List<RecordData> newrecords = app.Record.GetRecordList();
+            List<RecordData> newrecords = RecordData.GetAll();
             oldrecords.RemoveAt(0);
             oldrecords.Sort();
             newrecords.Sort();

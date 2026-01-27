@@ -61,7 +61,7 @@ namespace WebAddressbookTests
 
         public int CompareTo(GroupData other)
         {
-            if(Object.ReferenceEquals(other,null)) 
+            if (Object.ReferenceEquals(other, null))
             {
                 return 1;
             }
@@ -70,7 +70,7 @@ namespace WebAddressbookTests
 
         [Column(Name = "group_name"), NotNull]
         public string Name { get; set; }
-        
+
         [Column(Name = "group_header"), NotNull]
         public string Header { get; set; }
 
@@ -89,5 +89,16 @@ namespace WebAddressbookTests
             }
         }
 
+
+        public List<RecordData> GetRecord()
+        {
+            using (AddressBookDB db = new AddressBookDB())
+            {
+                return (from r in db.Records
+                        from gcr in db.GCR.Where(p => p.GroupId == Id && p.RecordId == r.Id && r.Deprecated == "0000-00-00 00:00:00")
+                        select r).Distinct().ToList();
+
+            }
+        }
     }
 }

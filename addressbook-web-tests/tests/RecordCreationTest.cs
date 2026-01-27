@@ -10,7 +10,7 @@ using WebAddressbookTests.tests;
 namespace WebAddressbookTests
 {
     [TestFixture]
-    public class CreateRecordTests : AuthTestBase
+    public class CreateRecordTests : RecordTestBase
     {
 
         public static IEnumerable<RecordData> RandomRecordDataProvider()
@@ -50,12 +50,12 @@ namespace WebAddressbookTests
         public void CreateNewRecord(RecordData record)
         {
 
-            List<RecordData> oldrecords = app.Record.GetRecordList();
+            List<RecordData> oldrecords = RecordData.GetAll();
 
             // Тестовые шаги
             app.Record.Create(record);
 
-            List<RecordData> newrecords = app.Record.GetRecordList();
+            List<RecordData> newrecords = RecordData.GetAll();
             oldrecords.Add(record);
             oldrecords.Sort();
             newrecords.Sort();

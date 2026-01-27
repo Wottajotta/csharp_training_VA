@@ -1,8 +1,10 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NUnit.Framework;
 
 
 namespace WebAddressbookTests
@@ -236,6 +238,35 @@ namespace WebAddressbookTests
             return Int32.Parse(m.Value);
         }
 
+        public void AddRecordToGroup(RecordData record, GroupData group)
+        {
+            manager.Navigator.GoToHomePage();
+            ClearGroupFilter();
+            SelectRecord(record.Id);
+            SelectGroupToAdd(group.Name);
+            CommitAddingRecordToGroup();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+                .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+        }
 
+        private void CommitAddingRecordToGroup()
+        {
+            driver.FindElement(By.Name("add")).Click();
+        }
+
+        private void SelectGroupToAdd(string name)
+        {
+            new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(name);
+        }
+
+        private void SelectRecord(string recordid)
+        {
+            driver.FindElement(By.Id(recordid)).Click();
+        }
+
+        private void ClearGroupFilter()
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
+        }
     }
 }
