@@ -208,6 +208,7 @@
     <Compile Include="tests\RecordModifyTests.cs" />
     <Compile Include="tests\RecordRemovalTests.cs" />
     <Compile Include="tests\RecordTestBase.cs" />
+    <Compile Include="tests\RemovalRecordFromGroup.cs" />
     <Compile Include="tests\SearchTest.cs" />
     <Compile Include="tests\TestBase.cs" />
     <Compile Include="oop\UnitTest1.cs" />

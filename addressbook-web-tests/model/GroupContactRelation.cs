@@ -11,8 +11,8 @@ namespace WebAddressbookTests
     public class GroupContactRelation
     {
         [Column(Name ="group_id")]
-        public string GroupId { get; }
+        public string GroupId { get; set; }
         [Column(Name = "id")]
-        public string RecordId { get; }
+        public string RecordId { get; set; }
     }
 }

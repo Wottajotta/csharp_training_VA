@@ -268,5 +268,37 @@ namespace WebAddressbookTests
         {
             new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
         }
+
+        public void RemoveRecordFromGroup(RecordData record, GroupData group)
+        {
+            manager.Navigator.GoToHomePage();
+            SelectGroupToRemove(group.Name, record.Id);
+            SelectRecordToRemove(record.Id);
+            SubmitRemovalRecordFromGroup();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+                .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+        }
+
+        private void SelectRecordToRemove(string recordid)
+        {
+            var checkboxes = driver.FindElements(By.CssSelector($"input[type='checkbox'][value='{recordid}']"));
+            if (checkboxes.Count == 0)
+            {
+                throw new Exception($"Запись с id {recordid} не найдена в выбранной группе.");
+            }
+            checkboxes[0].Click();
+        }
+
+
+        private void SubmitRemovalRecordFromGroup()
+        {
+            driver.FindElement(By.Name("remove")).Click();
+        }
+        private void SelectGroupToRemove(string name, string recordid)
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText(name);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+        .Until(d => d.FindElements(By.Id(recordid)).Count > 0);
+        }
     }
 }
