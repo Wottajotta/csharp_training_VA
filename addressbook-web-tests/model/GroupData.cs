@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
 using LinqToDB.Mapping;
+using LinqToDB;
 
 namespace WebAddressbookTests
 {
@@ -95,7 +96,7 @@ namespace WebAddressbookTests
             using (AddressBookDB db = new AddressBookDB())
             {
                 return (from r in db.Records
-                        from gcr in db.GCR.Where(p => p.GroupId == Id && p.RecordId == r.Id)
+                        from gcr in db.GCR.Where(p => p.GroupId == Id && p.RecordId == r.Id && r.Deprecated == "0000-00-00 00:00:00")
                         select r).Distinct().ToList();
 
             }

@@ -34,27 +34,31 @@ namespace WebAddressbookTests
 
 
         [Test, TestCaseSource("RandomRecordDataProvider")]
-        public void ModifyRecordTest(RecordData record)
+        public void ModifyRecordTest(RecordData newData)
         {
             if (app.Record.GetRecordList().Count == 0)
             {
-                app.Record.Create(record);
+                app.Record.Create(newData);
             }
 
-            List<RecordData> oldrecords = RecordData.GetAll();
-            RecordData oldData = oldrecords[0];
+            List<RecordData> oldRecords = RecordData.GetAll();
 
-            app.Record.Modify(0, record);
+            RecordData toBeModified = oldRecords[0];
+            RecordData modifiedData = new RecordData(newData.Firstname, newData.Lastname);
+            modifiedData.Id = toBeModified.Id;
 
-            oldData.Firstname = record.Firstname;
-            oldData.Lastname = record.Lastname;
+            app.Record.Modify(toBeModified.Id, modifiedData);
 
-            List<RecordData> newrecords = RecordData.GetAll();
+            List<RecordData> newRecords = RecordData.GetAll();
 
-            oldrecords.Sort();
-            newrecords.Sort();
+            toBeModified.Firstname = modifiedData.Firstname;
+            toBeModified.Lastname = modifiedData.Lastname;
 
-            Assert.That(newrecords, Is.EqualTo(oldrecords));
+            oldRecords.Sort();
+            newRecords.Sort();
+
+            Assert.That(newRecords, Is.EqualTo(oldRecords));
         }
+
     }
 }

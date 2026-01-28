@@ -35,19 +35,25 @@ namespace WebAddressbookTests
         [Test, TestCaseSource("RandomRecordDataProvider")]
         public void RecordRemovalTest(RecordData record)
         {
-
-            if (app.Record.GetRecordList().Count == 0) {
+            if (app.Record.GetRecordList().Count == 0)
+            {
                 app.Record.Create(record);
             }
-            List<RecordData> oldrecords = RecordData.GetAll();
 
-            app.Record.Remove();
+            List<RecordData> oldRecords = RecordData.GetAll();
+            RecordData toBeRemoved = oldRecords[0];
 
-            List<RecordData> newrecords = RecordData.GetAll();
-            oldrecords.RemoveAt(0);
-            oldrecords.Sort();
-            newrecords.Sort();
-            Assert.That(newrecords, Is.EqualTo(oldrecords));
+            app.Record.Remove(toBeRemoved);
+
+            List<RecordData> newRecords = RecordData.GetAll();
+
+            oldRecords.Remove(toBeRemoved);
+
+            oldRecords.Sort();
+            newRecords.Sort();
+
+            Assert.That(newRecords, Is.EqualTo(oldRecords));
         }
+
     }
 }

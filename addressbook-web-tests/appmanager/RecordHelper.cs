@@ -33,7 +33,7 @@ namespace WebAddressbookTests
         }
 
 
-        public RecordHelper Modify(int v, RecordData newData)
+        public RecordHelper Modify(string v, RecordData newData)
         {
             manager.Navigator.GoToHomePage();
             SelectRecordToEdit(v);
@@ -49,10 +49,10 @@ namespace WebAddressbookTests
             return this;
         }
 
-        public RecordHelper Remove()
+        public RecordHelper Remove(RecordData record)
         {
             manager.Navigator.GoToHomePage();
-            SelectRecord();
+            SelectRecord(record.Id);
             RemoveRecord();
             ReturnToHomePage();
             return this;
@@ -63,6 +63,10 @@ namespace WebAddressbookTests
             return !IsElementPresent(By.XPath("//table[@id='maintable']/tbody/tr[2]/td"));
         }
 
+        public void SelectRecordToEdit(string id)
+        {
+            driver.FindElement(By.XPath("//a[contains(@href,'edit.php?id=" + id + "')]")).Click();
+        }
         public void SelectRecordToEdit(int index)
         {
             driver.FindElement(By.XPath("//table[@id='maintable']/tbody/tr["+ (index+2) +"]/td[8]")).Click();
@@ -82,15 +86,6 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.Name("delete")).Click();
             recordCache = null;
-        }
-
-        private void SelectRecord()
-        {
-            if (!IsElementPresent(By.XPath("//table[@id='maintable']/tbody/tr[2]/td")))
-            {
-                return;
-            }
-            driver.FindElement(By.XPath("//table[@id='maintable']/tbody/tr[2]/td")).Click();
         }
 
         public RecordHelper FillRecordForm(RecordData address)
@@ -273,20 +268,10 @@ namespace WebAddressbookTests
         {
             manager.Navigator.GoToHomePage();
             SelectGroupToRemove(group.Name, record.Id);
-            SelectRecordToRemove(record.Id);
+            SelectRecord(record.Id);
             SubmitRemovalRecordFromGroup();
             new WebDriverWait(driver, TimeSpan.FromSeconds(10))
                 .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
-        }
-
-        private void SelectRecordToRemove(string recordid)
-        {
-            var checkboxes = driver.FindElements(By.CssSelector($"input[type='checkbox'][value='{recordid}']"));
-            if (checkboxes.Count == 0)
-            {
-                throw new Exception($"Запись с id {recordid} не найдена в выбранной группе.");
-            }
-            checkboxes[0].Click();
         }
 
 
